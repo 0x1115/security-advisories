@@ -13,31 +13,22 @@ License
 The PHP security advisories database is free and unencumbered software released
 into the public domain.
 
-Browsing Vulnerabilities
-------------------------
-
-You can browse the database entries on https://security.sensiolabs.org/database.
-
 Checking for Vulnerabilities
 ----------------------------
 
 There are several possibilities to check for vulnerabilities in your
 applications beside manual checks:
 
- * Upload your `composer.lock` file on https://security.sensiolabs.org/;
+ * [*Recommended*] Use the [Symfony CLI][1] (no PHP dependency, no third-party
+   API calls, checks are done locally on a clone of this repository):
 
- * Use the [CLI tool][1]:
+        symfony security:check /path/to/composer.lock
+
+ * Upload your `composer.lock` file on https://security.symfony.com/
+
+ * Use the [PHP CLI tool][2]:
 
         php checker security:check /path/to/composer.lock
-
- * Use the web service:
-
-        curl -H "Accept: text/plain" https://security.sensiolabs.org/check_lock -F lock=@/path/to/composer.lock
-
-   It will return all vulnerabilities detected in your dependencies in plain
-   text. You can also retrieve the information in the JSON format:
-
-        curl -H "Accept: application/json" https://security.sensiolabs.org/check_lock -F lock=@/path/to/composer.lock
 
 Contributing
 ------------
@@ -60,7 +51,8 @@ Contributing security advisories is as easy as it can get:
 
       * `title`:     A text that describes the security issue in a few words;
 
-      * `link`:      A link to the official security issue announcement;
+      * `link`:      A link to the official security issue announcement (HTTPS
+        links are preferred over HTTP ones);
 
       * `reference`: A unique reference to identify the software (the only
         supported scheme is `composer://` followed by the Composer identifier);
@@ -69,10 +61,11 @@ Contributing security advisories is as easy as it can get:
         name (like `2.0.x`), and the value is a hash with the following
         entries:
 
-          * `time`: The date when the security issue was fixed (most of the
-            time the date of the commit that fixed the issue (`2012-08-27
-            19:17:44`) -- this information must be as accurate as possible as
-            it is used to determined if a software is affected or not;
+          * `time`: The date and time in UTC when the security issue was fixed or null if the
+            issue is not fixed yet (most of the time, the date of the **merge**
+            commit that fixed the issue in the following format `2012-08-27
+            19:17:44`) -- this information must be as accurate as possible as it
+            is used to determine if a project is affected or not;
 
           * `versions`: An array of constraints describing affected versions
             for this branch (this is the same format as the one used for
@@ -80,7 +73,7 @@ Contributing security advisories is as easy as it can get:
 
   * If you have a CVE identifier, add it under the `cve` key.
 
-  * Make sure your file validates by running `php validator.php` from the root of this project.
+  * Make sure your file validates by running `php -d memory_limit=-1 validator.php` from the root of this project.
     This script needs some dependencies to be installed via composer, so you need to
     run `composer install` before.
 
@@ -88,4 +81,5 @@ If some affected code is available through different Composer entries (like
 when you have read-only subtree splits of a main repository), duplicate the
 information in several files.
 
-[1]: https://github.com/sensiolabs/security-checker
+[1]: https://symfony.com/download
+[2]: https://github.com/sensiolabs/security-checker
